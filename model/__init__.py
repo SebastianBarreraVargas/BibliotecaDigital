@@ -1,5 +1,6 @@
-# model/__init__.py
-from .base import USUARIOS_FILE, ADMINISTRADORES_FILE, LIBROS_FILE, CARPETA_PDFS, inicializar_archivos
-from .libro import Libro, Biblioteca
-from .usuario import Login, Administrador
-from .utils import extraer_primera_pagina
+from model.biblioteca.biblioteca import Biblioteca
+from model.biblioteca.libro import Libro
+from model.usuarios.usuario import Login
+from model.usuarios.administrador import Administrador
+from model.biblioteca.utils import extraer_primera_pagina
+from model.base_datos.administrador_base_datos import CARPETA_PDFS
