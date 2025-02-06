@@ -4,7 +4,6 @@ import shutil
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from model import Biblioteca, Libro, Login, Administrador, CARPETA_PDFS, extraer_primera_pagina
-from model import Libro, Biblioteca, Login, Administrador, extraer_primera_pagina
 
 def seleccionar_pdf(entry_pdf):
     archivo_pdf = filedialog.askopenfilename(filetypes=[("Archivos PDF", "*.pdf")])
