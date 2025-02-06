@@ -1,0 +1,2 @@
+idLibro,titulo,autor,precio,descuento,generos,calificacion,sinopsis,pdf_path
+1234,grafos,grafo,10.0,0.0,"ICPC, Programacion",0.0,hola,pdfs_libros/1234_Teoría de Grafos Taller de PC UMSS.pdf
