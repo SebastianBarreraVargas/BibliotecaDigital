@@ -1,3 +1,4 @@
 idLibro,titulo,autor,precio,descuento,generos,calificacion,sinopsis,pdf_path
 1234,grafos,grafo,10.0,0.0,"ICPC, Programacion",0.0,hola,pdfs_libros/1234_Teoría de Grafos Taller de PC UMSS.pdf
 2,taller git,scesi,22.0,2.0,2,1.0,git god,pdfs_libros/2_2_1. Instalación de Git - Taller de Git & GitHub.pdf
+9999,El Gran Libro,Autor Ejemplo,20.5,10.0,Ficción,4.5,Sinopsis del libro,pdfs_libros/libro.pdf
