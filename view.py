@@ -2,6 +2,7 @@
 import os
 import tkinter as tk
 from tkinter import messagebox
+from PIL import Image, ImageTk
 from controller import (registrar_usuario, registrar_admin, seleccionar_pdf, agregar_libro,
                         buscar_libro, iniciar_sesion, iniciar_sesion_admin)
 from model import Libro, Biblioteca, Login, Administrador, extraer_primera_pagina
@@ -299,14 +300,90 @@ def mostrar_pantalla_usuario(root, nombre_usuario):
                                     bg="#0d1b2a", fg="white", width=20)
     btn_buqueda_avanzada.pack(pady=10)
     
-    btn_ver_libros = tk.Button(main_frame, text="Ver Mis Libros", font=("Arial", 12, "bold"),
+    btn_todos_libros = tk.Button(main_frame, text="Mostrar Todos Los Libros", font=("Arial", 12, "bold"),
+                              bg="#0d1b2a", fg="white", width=20,
+                              command=lambda: mostrar_todos_los_libros(root, nombre_usuario))
+    btn_todos_libros.pack(pady=10)
+
+    btn_mis_libros = tk.Button(main_frame, text="Mis Libros", font=("Arial", 12, "bold"),
                               bg="#0d1b2a", fg="white", width=20)
-    btn_ver_libros.pack(pady=10)
+    btn_mis_libros.pack(pady=10)
     
     btn_cerrar_sesion = tk.Button(main_frame, text="Cerrar Sesión", font=("Arial", 12, "bold"),
                                   bg="#0d1b2a", fg="white", width=20,
                                   command=lambda: mostrar_pantalla_principal(root))
     btn_cerrar_sesion.pack(pady=10)
+
+    img = Image.open("assets/3144456.png") 
+    img = img.resize((50, 50))
+    carrito_icono = ImageTk.PhotoImage(img)
+
+    btn_carrito = tk.Button(root, image=carrito_icono, bg="white", borderwidth=0,
+                            command=lambda: mostrar_carrito(root, nombre_usuario))
+    btn_carrito.image = carrito_icono 
+    btn_carrito.place(relx=1.0, rely=1.0, anchor="se", x=-20, y=-20)
+
+def mostrar_carrito(root, nombre_usuario):
+    global txt_area
+    for widget in root.winfo_children():
+        widget.destroy()
+    
+    header = tk.Frame(root, bg="#e77e3e", height=50)
+    header.pack(fill=tk.X)
+    header_label = tk.Label(header, text="Biblioteca OnLine", font=("Arial", 18, "bold"),
+                             bg="#e77e3e", fg="black")
+    header_label.pack(side=tk.LEFT, padx=10, pady=10)
+    header_label.bind("<Button-1>", lambda e: mostrar_pantalla_usuario(root, nombre_usuario))
+    
+    usuario_label = tk.Label(header, text=f"{nombre_usuario}", font=("Arial", 12),
+                             bg="#e77e3e", fg="white")
+    usuario_label.pack(side=tk.RIGHT, padx=10, pady=10)
+    
+    main_frame = tk.Frame(root, bg="white")
+    main_frame.pack(pady=20)
+    
+    btn_proceder_pago = tk.Button(root, text="Proceder al pago", font=("Arial", 12, "bold"),
+                            bg="#0d1b2a", fg="white", width=20)
+    btn_proceder_pago.place(relx=1.0, rely=1.0, anchor="se", x=-10, y=-10)
+
+def mostrar_todos_los_libros(root, nombre_usuario):
+    for widget in root.winfo_children():
+        widget.destroy()
+    header = tk.Frame(root, bg="#e77e3e", height=50)
+    header.pack(fill=tk.X)
+    header_label = tk.Label(header, text="Biblioteca OnLine", font=("Arial", 18, "bold"),
+                             bg="#e77e3e", fg="black")
+    header_label.pack(side=tk.LEFT, padx=10, pady=10)
+    header_label.bind("<Button-1>", lambda e: mostrar_pantalla_usuario(root, nombre_usuario))
+    
+    usuario_label = tk.Label(header, text=f"{nombre_usuario}", font=("Arial", 12),
+                             bg="#e77e3e", fg="white")
+    usuario_label.pack(side=tk.RIGHT, padx=10, pady=10)
+    main_frame = tk.Frame(root, bg="white")
+    main_frame.pack(pady=20, fill=tk.BOTH, expand=True)
+
+    scrollbar = tk.Scrollbar(main_frame)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    
+    listbox = tk.Listbox(main_frame, font=("Arial", 12))
+    listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+    
+    listbox.config(yscrollcommand=scrollbar.set)
+    scrollbar.config(command=listbox.yview)
+    
+    biblioteca = Biblioteca()
+    if biblioteca.libros:
+        for libro in biblioteca.libros:
+
+            item_text = f"{libro.titulo} - ${libro.precio}"
+            listbox.insert(tk.END, item_text)
+    else:
+        listbox.insert(tk.END, "No hay libros disponibles.")
+    
+    btn_volver = tk.Button(root, text="Volver", font=("Arial", 12, "bold"),
+                           bg="#d9534f", fg="white", width=15,
+                           command=lambda: mostrar_pantalla_usuario(root, nombre_usuario))
+    btn_volver.pack(pady=10)
 
 def _buscar_libro(root):
     global txt_area
@@ -326,6 +403,7 @@ def mostrar_detalle_libro(root, libro):
     header_label = tk.Label(header, text="Detalle del Libro", font=("Arial", 18, "bold"),
                              bg="#e77e3e", fg="black")
     header_label.pack(pady=10)
+    header_label.bind("<Button-1>", lambda e: mostrar_pantalla_usuario(root))
     
     main_frame = tk.Frame(root, bg="white")
     main_frame.pack(pady=20, fill=tk.BOTH, expand=True)
@@ -380,10 +458,128 @@ def mostrar_pantalla_administrador(root, nombre_usuario):
     btn_subir_libro.pack(pady=10)
     
     btn_moderar_libros = tk.Button(main_frame, text="Moderar Libros", font=("Arial", 12, "bold"),
-                                   bg="#0d1b2a", fg="white", width=20)
+                                   bg="#0d1b2a", fg="white", width=20,
+                                   command=lambda: mostrar_moderacion_libros(root, nombre_usuario))
     btn_moderar_libros.pack(pady=10)
     
     btn_cerrar_sesion = tk.Button(main_frame, text="Cerrar Sesión", font=("Arial", 12, "bold"),
                                   bg="#0d1b2a", fg="white", width=20,
                                   command=lambda: mostrar_pantalla_principal(root))
     btn_cerrar_sesion.pack(pady=10)
+
+def mostrar_moderacion_libros(root, nombre_usuario):
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    header = tk.Frame(root, bg="#e77e3e", height=50)
+    header.pack(fill=tk.X)
+
+    header_label = tk.Label(header, text="Biblioteca OnLine", font=("Arial", 18, "bold"),
+                             bg="#e77e3e", fg="black")
+    header_label.pack(side=tk.LEFT, padx=10, pady=10)
+    header_label.bind("<Button-1>", lambda e: mostrar_pantalla_administrador(root, nombre_usuario))
+    
+    usuario_label = tk.Label(header, text=f"{nombre_usuario}", font=("Arial", 12),
+                             bg="#e77e3e", fg="white")
+    usuario_label.pack(side=tk.RIGHT, padx=10, pady=10)
+
+    main_frame = tk.Frame(root, bg="white")
+    main_frame.pack(pady=20, fill=tk.BOTH, expand=True)
+
+    scrollbar = tk.Scrollbar(main_frame)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+    listbox = tk.Listbox(main_frame, font=("Arial", 12))
+    listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+    listbox.config(yscrollcommand=scrollbar.set)
+    scrollbar.config(command=listbox.yview)
+
+    biblioteca = Biblioteca()
+    libro_map = {} 
+
+    if biblioteca.libros:
+        for i, libro in enumerate(biblioteca.libros):
+            item_text = f"{libro.titulo} - ${libro.precio}"
+            listbox.insert(tk.END, item_text)
+            libro_map[i] = libro  
+    else:
+        listbox.insert(tk.END, "No hay libros disponibles.")
+
+    # Función para manejar el doble clic
+    def on_libro_doble_click(event):
+        seleccion = listbox.curselection()
+        if seleccion:
+            index = seleccion[0]
+            libro_seleccionado = libro_map.get(index)
+            if libro_seleccionado:
+                mostrar_detalles_libro(root, libro_seleccionado, nombre_usuario)  
+
+    # Vincular evento de doble clic
+    listbox.bind("<Double-Button-1>", on_libro_doble_click)
+
+    btn_volver = tk.Button(root, text="Volver", font=("Arial", 12, "bold"),
+                           bg="#d9534f", fg="white", width=15,
+                           command=lambda: mostrar_pantalla_administrador(root, nombre_usuario))
+    btn_volver.pack(pady=10)
+
+
+
+def mostrar_detalles_libro(root, libro, nombre_usuario):
+    for widget in root.winfo_children():
+        widget.destroy()
+    
+    header = tk.Frame(root, bg="#e77e3e", height=50)
+    header.pack(fill=tk.X)
+    header_label = tk.Label(header, text="Detalle del Libro", font=("Arial", 18, "bold"),
+                             bg="#e77e3e", fg="black")
+    header_label.pack(pady=10)
+    header_label.bind("<Button-1>", lambda e: mostrar_pantalla_administrador(root, nombre_usuario))
+    
+    main_frame = tk.Frame(root, bg="white")
+    main_frame.pack(pady=20, fill=tk.BOTH, expand=True)
+    
+    # Panel izquierdo con información del libro
+    panel_izquierdo = tk.Frame(main_frame, bg="white")
+    panel_izquierdo.pack(side=tk.LEFT, padx=10, fill=tk.Y)
+    
+    tk.Label(panel_izquierdo, text=f"Título: {libro.titulo}", font=("Arial", 14, "bold"),
+             bg="white").pack(pady=5, anchor="w")
+    tk.Label(panel_izquierdo, text=f"Precio: ${libro.precio}", font=("Arial", 12),
+             bg="white").pack(pady=5, anchor="w")
+    tk.Label(panel_izquierdo, text=f"Autor: {libro.autor}", font=("Arial", 12),
+             bg="white").pack(pady=5, anchor="w")
+    
+    # Panel derecho con el texto del PDF y botones
+    panel_derecho = tk.Frame(main_frame, bg="white")
+    panel_derecho.pack(side=tk.RIGHT, padx=10, fill=tk.BOTH, expand=True)
+    
+    if libro.pdf_path and os.path.exists(libro.pdf_path):
+        texto_pdf = extraer_primera_pagina(libro.pdf_path)
+    else:
+        texto_pdf = "No hay PDF disponible."
+    
+    texto_widget = tk.Text(panel_derecho, height=20, width=40, font=("Arial", 10))
+    texto_widget.insert(tk.END, texto_pdf)
+    texto_widget.config(state=tk.DISABLED)
+    texto_widget.pack(pady=10, fill=tk.BOTH, expand=True)
+    
+    # Marco para los botones de la derecha
+    botones_frame = tk.Frame(panel_derecho, bg="white")
+    botones_frame.pack(pady=10, fill=tk.X)
+
+    btn_modificar = tk.Button(botones_frame, text="Modificar Detalles", font=("Arial", 12, "bold"),
+                              bg="#5bc0de", fg="white", width=20,
+                              command=lambda: modificar_libro(root, libro, nombre_usuario))
+    btn_modificar.pack(pady=5)
+
+    btn_eliminar = tk.Button(botones_frame, text="Eliminar Libro", font=("Arial", 12, "bold"),
+                             bg="#d9534f", fg="white", width=20,
+                             command=lambda: eliminar_libro(root, libro, nombre_usuario))
+    btn_eliminar.pack(pady=5)
+
+    btn_volver = tk.Button(root, text="Volver", font=("Arial", 12, "bold"),
+                           bg="#d9534f", fg="white", width=15,
+                           command=lambda: mostrar_moderacion_libros(root, nombre_usuario))
+    btn_volver.pack(pady=10)
+    btn_volver.place(relx=1.0, rely=1.0, anchor="se", x=-20, y=-35)
