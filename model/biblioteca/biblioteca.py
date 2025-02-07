@@ -1,6 +1,8 @@
 from model.biblioteca.libro import Libro
 from model.base_datos.administrador_base_datos import Administrador_base_datos
 from model.exceptions import BadRequestException
+from model.exceptions import NotAuthorizedException
+
 
 class Biblioteca:
     def __init__(self):
