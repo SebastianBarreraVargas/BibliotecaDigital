@@ -1,5 +1,6 @@
 from model.biblioteca.libro import Libro
 from model.base_datos.administrador_base_datos import Administrador_base_datos
+from model.exceptions import BadRequestException
 
 class Biblioteca:
     def __init__(self):
@@ -9,7 +10,9 @@ class Biblioteca:
     def agregar_libro(self, libro):
         """Agrega un libro si no existe otro con el mismo ID."""
         if any(l.idLibro == libro.idLibro for l in self.libros):
-            raise ValueError(f"El libro con ID {libro.idLibro} ya existe.")
+            raise BadRequestException(f"El libro con ID {libro.idLibro} ya existe.")
+        if not libro.titulo or not libro.autor:
+            raise BadRequestException("El libro debe tener un título y un autor.")
         self.libros.append(libro)
         libro.guardar_libro()
 
@@ -29,7 +32,10 @@ class Biblioteca:
 
     def buscar_libro_por_titulo(self, titulo):
         """Busca un libro por su título (sin distinguir mayúsculas o minúsculas)."""
-        return next((libro for libro in self.libros if libro.titulo.lower() == titulo.lower()), None)
+        libro = next((libro for libro in self.libros if libro.titulo.lower() == titulo.lower()), None)
+        if libro is None:
+            raise BadRequestException(f"No se encontró un libro con el título {titulo}.")
+        return libro
 
     def buscar_libros_por_genero(self, genero):
         """Devuelve una lista de libros que incluyan el género especificado."""
