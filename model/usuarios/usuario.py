@@ -1,6 +1,7 @@
 import re
 from model.base_datos.administrador_base_datos import Administrador_base_datos
 from tkinter import messagebox
+from model.exceptions import NotAuthorizedException
 
 class Login:
     def __init__(self, nombre, email, password):
@@ -10,10 +11,12 @@ class Login:
         self.db = Administrador_base_datos()
 
     def email_existe(self):
+        """Verifica si el email ya está registrado en la base de datos."""
         usuarios = self.db.read("usuarios")
         return any(user["Email"] == self.email for user in usuarios)
 
     def validar_password(self, password):
+        """Valida la contraseña según las reglas definidas."""
         if len(password) < 8:
             return "La contraseña debe tener al menos 8 caracteres."
         if not any(char.isupper() for char in password):
@@ -23,6 +26,7 @@ class Login:
         return None
 
     def registrarUsuario(self):
+        """Registra un nuevo usuario si el email no está registrado y la contraseña es válida."""
         error = self.validar_password(self.password)
         if error:
             messagebox.showerror("Error de Contraseña", error)
@@ -34,10 +38,12 @@ class Login:
         messagebox.showinfo("Registro Exitoso", "Usuario registrado correctamente.")
 
     def iniciarSesion(self):
+        """Inicia sesión si las credenciales son correctas."""
         usuarios = self.db.read("usuarios")
         for user in usuarios:
             if user["Email"] == self.email and user["Password"] == self.password:
                 messagebox.showinfo("Login Exitoso", f"Bienvenido {user['Nombre']}")
                 return user["Nombre"]
-        messagebox.showerror("Error", "Email o contraseña incorrectos.")
-        return None
+        
+        # Lanzamos la excepción si no se encuentra un usuario con las credenciales correctas
+        raise NotAuthorizedException("Email o contraseña incorrectos.")

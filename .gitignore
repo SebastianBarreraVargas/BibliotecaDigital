@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.pytest_cache/
 
 # Entornos virtuales
 venv/
@@ -16,3 +17,5 @@ env/
 
 # Configuración de Jupyter Notebook
 .ipynb_checkpoints/
+
+
