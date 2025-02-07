@@ -19,6 +19,16 @@ def registrar_admin(nombre, codigo, email, password):
     admin = Administrador(nombre, codigo, email, password)
     admin.registrarAdministrador()
 
+def eliminar_libro(root, libro, nombre_usuario):
+    biblioteca = Biblioteca()
+    try:
+        biblioteca.borrar_libro(libro.idLibro)
+        messagebox.showinfo("Éxito", f"El libro '{libro.titulo}' se ha eliminado correctamente.")
+        from view import mostrar_moderacion_libros
+        mostrar_moderacion_libros(root, nombre_usuario)
+    except ValueError as e:
+        messagebox.showerror("Error", str(e))
+
 def agregar_libro(idLibro, titulo, autor, precio, descuento, generos, calificacion, sinopsis, pdf_path):
     biblioteca = Biblioteca()
     if not (idLibro and titulo and autor and precio and descuento and generos and calificacion and sinopsis):
