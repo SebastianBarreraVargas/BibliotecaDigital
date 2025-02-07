@@ -1,17 +1,17 @@
 import csv
 import os
 
-USUARIOS_FILE = "usuarios.csv"
-ADMINISTRADORES_FILE = "administradores.csv"
-LIBROS_FILE = "libros.csv"
+USUARIOS_FILE = "./model/base_datos/usuarios.csv"
+ADMINISTRADORES_FILE =  "./model/base_datos/usuarios.csv"
+LIBROS_FILE =  "./model/base_datos/libros.csv"
 CARPETA_PDFS = "pdfs_libros"
 
 class Administrador_base_datos:
     def __init__(self):
         self.archivos = {
-            "usuarios": "usuarios.csv",
-            "administradores": "administradores.csv",
-            "libros": "libros.csv"
+            "usuarios": USUARIOS_FILE,
+            "administradores": ADMINISTRADORES_FILE,
+            "libros": LIBROS_FILE
         }
         self.carpeta_pdfs = "pdfs_libros"
         self.ensure_files_and_folders_exist()
