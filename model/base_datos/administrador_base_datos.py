@@ -2,7 +2,7 @@ import csv
 import os
 
 USUARIOS_FILE = "./model/base_datos/usuarios.csv"
-ADMINISTRADORES_FILE =  "./model/base_datos/usuarios.csv"
+ADMINISTRADORES_FILE = "./model/base_datos/administradores.csv"
 LIBROS_FILE =  "./model/base_datos/libros.csv"
 CARPETA_PDFS = "pdfs_libros"
 
