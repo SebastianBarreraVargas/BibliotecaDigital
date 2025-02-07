@@ -5,7 +5,7 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 from controller import (registrar_usuario, registrar_admin, seleccionar_pdf, agregar_libro,
                         buscar_libro, iniciar_sesion, iniciar_sesion_admin, eliminar_libro)
-from model import Libro, Biblioteca, Login, Administrador, extraer_primera_pagina
+from model import Libro, Biblioteca, Usuario, Administrador, extraer_primera_pagina
 
 # Variables globales para los widgets (estas variables se pueden encapsular en clases en una mejora futura)
 entry_nombre = None

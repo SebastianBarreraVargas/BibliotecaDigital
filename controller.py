@@ -3,7 +3,7 @@ import os
 import shutil
 import tkinter as tk
 from tkinter import filedialog, messagebox
-from model import Biblioteca, Libro, Login, Administrador, CARPETA_PDFS, extraer_primera_pagina
+from model import Biblioteca, Libro, Usuario, Administrador, CARPETA_PDFS, extraer_primera_pagina
 
 def seleccionar_pdf(entry_pdf):
     archivo_pdf = filedialog.askopenfilename(filetypes=[("Archivos PDF", "*.pdf")])
@@ -12,7 +12,7 @@ def seleccionar_pdf(entry_pdf):
         entry_pdf.insert(0, archivo_pdf)
 
 def registrar_usuario(nombre, email, password):
-    usuario = Login(nombre, email, password)
+    usuario = Usuario(nombre, email, password)
     usuario.registrarUsuario()
 
 def registrar_admin(nombre, codigo, email, password):
@@ -61,7 +61,7 @@ def buscar_libro(titulo):
     return libro
 
 def iniciar_sesion(email, password):
-    usuario = Login("", email, password)
+    usuario = Usuario("", email, password)
     return usuario.iniciarSesion()
 
 def iniciar_sesion_admin(email, password):

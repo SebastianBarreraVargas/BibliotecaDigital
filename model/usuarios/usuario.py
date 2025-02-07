@@ -3,7 +3,7 @@ from model.base_datos.administrador_base_datos import Administrador_base_datos
 from tkinter import messagebox
 from model.exceptions import NotAuthorizedException
 
-class Login:
+class Usuario:
     def __init__(self, nombre, email, password):
         self.nombre = nombre
         self.email = email

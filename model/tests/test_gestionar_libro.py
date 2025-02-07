@@ -1,7 +1,7 @@
 import pytest
 from model.biblioteca.biblioteca import Biblioteca, BadRequestException, NotAuthorizedException
 from model.biblioteca.libro import Libro
-from model.usuarios.usuario import Login
+from model.usuarios.usuario import Usuario
 from model.base_datos.administrador_base_datos import Administrador_base_datos
 from unittest.mock import MagicMock
 
@@ -32,7 +32,7 @@ def libro_valido():
 
 @pytest.fixture
 def login_valido():
-    return Login("Juan", "juan@example.com", "Contraseña123!")
+    return Usuario("Juan", "juan@example.com", "Contraseña123!")
 
 def test_agregar_libro_duplicado(biblioteca, libro_valido):
     with pytest.raises(BadRequestException, match="El libro con ID 2 ya existe."):

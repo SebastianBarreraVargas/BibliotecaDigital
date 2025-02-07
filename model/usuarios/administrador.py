@@ -1,7 +1,7 @@
-from model import Login
+from model import Usuario
 from tkinter import messagebox
 
-class Administrador(Login):
+class Administrador(Usuario):
     def __init__(self, nombre, codigo_trabajador, email, password):
         super().__init__(nombre, email, password)
         self.codigo_trabajador = codigo_trabajador
