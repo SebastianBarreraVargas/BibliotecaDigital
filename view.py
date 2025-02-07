@@ -1,5 +1,7 @@
 # view.py
 import os
+import subprocess
+import platform
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
@@ -349,6 +351,7 @@ def mostrar_carrito(root, nombre_usuario):
 def mostrar_todos_los_libros(root, nombre_usuario):
     for widget in root.winfo_children():
         widget.destroy()
+
     header = tk.Frame(root, bg="#e77e3e", height=50)
     header.pack(fill=tk.X)
     header_label = tk.Label(header, text="Biblioteca OnLine", font=("Arial", 18, "bold"),
@@ -359,6 +362,7 @@ def mostrar_todos_los_libros(root, nombre_usuario):
     usuario_label = tk.Label(header, text=f"{nombre_usuario}", font=("Arial", 12),
                              bg="#e77e3e", fg="white")
     usuario_label.pack(side=tk.RIGHT, padx=10, pady=10)
+    
     main_frame = tk.Frame(root, bg="white")
     main_frame.pack(pady=20, fill=tk.BOTH, expand=True)
 
@@ -374,11 +378,19 @@ def mostrar_todos_los_libros(root, nombre_usuario):
     biblioteca = Biblioteca()
     if biblioteca.libros:
         for libro in biblioteca.libros:
-
             item_text = f"{libro.titulo} - ${libro.precio}"
             listbox.insert(tk.END, item_text)
     else:
         listbox.insert(tk.END, "No hay libros disponibles.")
+    
+    def on_double_click(event):
+        selection = listbox.curselection()
+        if selection:
+            index = selection[0]
+            libro_seleccionado = biblioteca.libros[index]
+            mostrar_pdf(libro_seleccionado)
+    
+    listbox.bind("<Double-Button-1>", on_double_click)
     
     btn_volver = tk.Button(root, text="Volver", font=("Arial", 12, "bold"),
                            bg="#d9534f", fg="white", width=15,
@@ -393,6 +405,33 @@ def _buscar_libro(root):
         mostrar_detalle_libro(root, libro)
     else:
         messagebox.showerror("No encontrado", "El libro no se encuentra en la base de datos.")
+
+def mostrar_pdf(libro):
+    try:
+        pdf_path = libro.pdf_path
+        titulo = libro.titulo
+    except AttributeError:
+        pdf_path = libro.get("pdf_path")
+        titulo = libro.get("titulo", "Desconocido")
+    
+    if not pdf_path:
+        print(f"No se encontró la ruta del PDF para el libro: {titulo}")
+        return
+    
+    if not os.path.exists(pdf_path):
+        print(f"El archivo PDF no existe: {pdf_path}")
+        return
+
+    print(f"Abriendo PDF del libro: {titulo}")
+
+    sistema = platform.system()
+    if sistema == "Windows":
+        os.startfile(pdf_path)
+    elif sistema == "Darwin":  # macOS
+        subprocess.call(["open", pdf_path])
+    else: 
+        subprocess.call(["xdg-open", pdf_path])
+
 
 def mostrar_detalle_libro(root, libro):
     for widget in root.winfo_children():
@@ -539,7 +578,6 @@ def mostrar_detalles_libro(root, libro, nombre_usuario):
     main_frame = tk.Frame(root, bg="white")
     main_frame.pack(pady=20, fill=tk.BOTH, expand=True)
     
-    # Panel izquierdo con información del libro
     panel_izquierdo = tk.Frame(main_frame, bg="white")
     panel_izquierdo.pack(side=tk.LEFT, padx=10, fill=tk.Y)
     
@@ -550,7 +588,6 @@ def mostrar_detalles_libro(root, libro, nombre_usuario):
     tk.Label(panel_izquierdo, text=f"Autor: {libro.autor}", font=("Arial", 12),
              bg="white").pack(pady=5, anchor="w")
     
-    # Panel derecho con el texto del PDF y botones
     panel_derecho = tk.Frame(main_frame, bg="white")
     panel_derecho.pack(side=tk.RIGHT, padx=10, fill=tk.BOTH, expand=True)
     
@@ -564,7 +601,6 @@ def mostrar_detalles_libro(root, libro, nombre_usuario):
     texto_widget.config(state=tk.DISABLED)
     texto_widget.pack(pady=10, fill=tk.BOTH, expand=True)
     
-    # Marco para los botones de la derecha
     botones_frame = tk.Frame(panel_derecho, bg="white")
     botones_frame.pack(pady=10, fill=tk.X)
 
